@@ -1,0 +1,51 @@
+--create database kutuphane; --bir kez database oluşturulurken çalıştırılır
+use kutuphane --bu kütüphaneyi kullanarak aşağıdaki tabloları ekleyebilirsin
+
+create table uyeler(
+uyeNo int not null identity(1,1) primary key,
+uyeAdi nvarchar(50) not null,
+uyeSoyadi nvarchar(50) not null,
+telefon nvarchar (20) not null,
+cinsiyet char (2) not null,
+eposta nvarchar(100) not null,
+adresNo int foreign key(adresNo) REFERENCES
+adresler(adresNo)
+);
+
+create table adresler(
+adresNo int not null identity(1,1) Primary Key,
+sehir nvarchar(100),
+cadde nvarchar(100),
+mahalle nvarchar(100),
+binaNo int,
+postaKodu int,
+ulke nvarchar(100),
+);
+
+create table kutuphane_t(
+Kutuphane_No int identity(1,1)  not null Primary Key,
+Kutuphane_isim nvarchar(100),
+aciklama nvarchar(150),
+adresNo int Foreign Key (adresNo) references adresler(adresNo)
+);
+
+create table emanetler(
+emanetNo int  not null identity(1,1) primary key,
+emanetTarih nvarchar(100),
+teslimTarih nvarchar(50),
+uyeNo int foreign key(uyeNo) references Uyeler(uyeNo),
+Kutuphane_No int foreign key(Kutuphane_No) references kutuphane_t(Kutuphane_No),
+Isbn int foreign key(Isbn) references kitaplar(Isbn)
+);
+
+create table kitaplar(
+
+Isbn int not null primary key,
+sayfa_sayisi int,
+Kitap_Adi nvarchar(100)not null,
+Yayin_Adi nvarchar(100),
+Yayin_Tarihi nvarchar(100),
+
+
+
+);
