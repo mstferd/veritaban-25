@@ -1,51 +1,93 @@
---create database kutuphane; --bir kez database oluşturulurken çalıştırılır
-use kutuphane --bu kütüphaneyi kullanarak aşağıdaki tabloları ekleyebilirsin
+create database kutuphane; --bir kez database oluşturulurken çalıştırılır.
 
-create table uyeler(
-uyeNo int not null identity(1,1) primary key,
-uyeAdi nvarchar(50) not null,
-uyeSoyadi nvarchar(50) not null,
-telefon nvarchar (20) not null,
-cinsiyet char (2) not null,
-eposta nvarchar(100) not null,
-adresNo int foreign key(adresNo) REFERENCES
-adresler(adresNo)
-);
+use Kutuphane -- bu kütüphaneyi kullanarak tablo ekleyebiliriz
 
+1)              
 create table adresler(
-adresNo int not null identity(1,1) Primary Key,
-sehir nvarchar(100),
-cadde nvarchar(100),
-mahalle nvarchar(100),
-binaNo int,
-postaKodu int,
-ulke nvarchar(100),
+adresNo int not null identity(1,1) primary key,
+sehir nvarchar(30),
+cadde nvarchar(30),
+mahalle nvarchar(30),
+bina_No int,
+posta_Kodu int,
+ulke nvarchar(100)
+
 );
 
-create table kutuphane_t(
-Kutuphane_No int identity(1,1)  not null Primary Key,
+2)    
+create table Uyeler(
+Uye_No int not null identity(1,1) primary key,
+Uye_Ad nvarchar(50) not null,
+Uye_Soyad nvarchar(50) not null,
+Telefon nvarchar(20) not null,
+Cinsiyet char(2),
+Eposta nvarchar(100),
+AdresNo int foreign key(adresNo) references adresler(adresNo)         -- adresler tablosu ile 1 e n ilişki olduğu için foreign key ekledik
+);
+
+
+3)
+create table Kutuphane_t (
+Kutuphane_No int identity(1,1) not null primary key,
 Kutuphane_isim nvarchar(100),
-aciklama nvarchar(150),
-adresNo int Foreign Key (adresNo) references adresler(adresNo)
+Acıklama nvarchar(150),
+adresNo int  foreign key (adresNo)references adresler(adresNo)         -- adresler tablosu ile 1 e n ilişki olduğu için foreign key ekledik
+
 );
 
-create table emanetler(
-emanetNo int  not null identity(1,1) primary key,
-emanetTarih nvarchar(100),
-teslimTarih nvarchar(50),
-uyeNo int foreign key(uyeNo) references Uyeler(uyeNo),
-Kutuphane_No int foreign key(Kutuphane_No) references kutuphane_t(Kutuphane_No),
-Isbn int foreign key(Isbn) references kitaplar(Isbn)
-);
-
+4)
 create table kitaplar(
-
 Isbn int not null primary key,
-sayfa_sayisi int,
-Kitap_Adi nvarchar(100)not null,
-Yayin_Adi nvarchar(100),
-Yayin_Tarihi nvarchar(100),
+Sayfa_Sayisi nvarchar(50),
+Kitap_Adi nvarchar(50),
+Yayin_Tarih nvarchar(50)
+
+);
+
+5)
+create table emanet(
+emanet_no int identity(1,1) not null primary key,
+emanet_tarih nvarchar(50),
+teslim_tarih nvarchar(50),
+uye_No int foreign key (uye_No) references Uyeler(Uye_No),                                -- üyeler tablosu ile 1 e n ilişki olduğu için foreign key ekledik
+Kutuphane_No int foreign key (Kutuphane_No) references Kutuphane_t(Kutuphane_No),        -- kütüphane tablosu ile 1 e n ilişki olduğu için foreign key ekledik
+Isbn int foreign key (Isbn) references kitaplar(Isbn)                                    -- kitaplar tablosu ile 1 e n ilişki olduğu için foreign key ekledik
+
+);
+
+6)
+create table KitapBulunur(
+Kutuphane_No int foreign key(Kutuphane_No) references Kutuphane(Kutuphane_No),                -- Kutuphane tablosu ile m e n yani çoka çok ilişki olduğu için ortak bir tablo oluşturduk ve buraya foreign key ekledik.
+ISBN int foreign key(ISBN) references Kitaplar(ISBN),                                          -- Kitaplar tablosu ile m e n yani çoka çok ilişki olduğu için ortak bir tablo oluşturduk ve buraya foreign key ekledik.
+Miktar int
+
+);
+7)
+create table Kategoriler(
+Kategori_No int not null identity(1,1) primary key,
+Kategori_Adi nvarchar(100)
+
+);
+8)
+create table KategoriBulunur(
+Id int identity(1,1) not null primary key,
+Kategori_No int foreign key(Kategori_No) references Kategoriler(Kategori_No),            -- kategoriler tablosu ile 1 e n ilişki oluğu için  foreign key ekledik
+ISBN int foreign key(ISBN) references Kitaplar(ISBN),                                    -- Kitaplar tablosu ile 1 e n ilişki oluğu için  foreign key ekledik
+
+);
 
 
+9)
+create table Yazarlar(
+Yazar_No int not null identity(1,1) primary key,
+Yazar_Ad nvarchar(100) not null,
+Yazar_Soyad nvarchar(100) not null,
+
+);
+10)
+create table KitapYazar(
+Id int identity(1,1) not null primary key,     
+ISBN int foreign key(ISBN) references Kitaplar(ISBN),                  -- Kitaplar tablosu ile m e n  yani çoka çok ilişki oluğu için  ayrı bir tablo oluşturup  foreign key ekledik
+Yazar_No int foreign key(Yazar_No) references Yazarlar(Yazar_No)        -- Yazarlar tablosu ile m e n  yani çoka çok ilişki oluğu için  ayrı bir tablo oluşturup  foreign key ekledik
 
 );
